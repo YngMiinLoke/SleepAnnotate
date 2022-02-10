@@ -8,7 +8,7 @@ rm(list = ls())
 
 ################################### User's input needed ###################################
 
-svfile = 1 ## Do you want to save the output?
+svfile = 0 ## Do you want to save the output?
 
 ## Modify working directory
 Dir <- "./"
@@ -21,13 +21,15 @@ dataBTOri <- read.csv(paste0(Dir, "ExampleData/", "BT_Timestamp.csv"))
 dataWTOri <- read.csv(paste0(Dir, "ExampleData/", "WT_Timestamp.csv"))
 
 ## Standardize naming of the column, rename({NewName} = {OldName}), (comment this if your column is already named as "sleep" and "wake")
-dataBTOri <- dataBTOri %>% rename(sleep = sleep,
+dataBTOri <- dataBTOri %>% rename(Subject = Subject,
+                                  sleep = sleep,
                                   wake = wake)
-dataWTOri <- dataWTOri %>% rename(sleep = sleep,
+dataWTOri <- dataWTOri %>% rename(Subject = Subject,
+                                  sleep = sleep,
                                   wake = wake)
 
 ######## ------- Comment this out if there is no Telegram input) ------- ########
-## Read in Telegram csv with timestamps from Step 1 
+## Read in Telegram csv with timestamps from Step 1
 dataTELEOri <- read.csv(paste0(Dir, "ExampleData/", "TELE_Timestamp.csv"))
 
 ## (Comment this out if there is no Telegram input)
@@ -36,7 +38,7 @@ dataTELEOri <- dataTELEOri %>% rename(sleep = sleep,
 ######## ------- Comment this out if there is no Telegram input) ------- ########
 
 ## Input a list of subjects
-subjList <- paste0("S", str_pad(c(1), width = 3, pad = "0"))
+subjList <- paste0("S", str_pad(c(1:2), width = 3, pad = "0"))
 
 ## Set activity count cutoff
 ActiDir <- "./ExampleData/"
@@ -69,7 +71,7 @@ if(exists("dataTELEOri")) {
          wake = ymd_hms(wake, tz = "Asia/Singapore"))
 }
 
-#Subj <- "S001" #For script testing only
+#Subj <- "S002" #For script testing only
 for (Subj in subjList) {
   tryCatch({
     print(paste0("Making figures for subject ", Subj))
@@ -82,11 +84,11 @@ for (Subj in subjList) {
     dataActi <- dataActi %>% mutate(DateTime = paste0(Date, " ", Time)) %>% mutate(DateTime = dmy_hm(DateTime, tz = "Asia/Singapore")) 
     
     # ################################### subset diaries ###################################
-    dfsleep <- dataWTOri %>% filter(Subj == Subj)
-    dfnap <- dataBTOri %>% filter(Subj == Subj)
+    dfsleep <- dataWTOri %>% filter(Subject == Subj)
+    dfnap <- dataBTOri %>% filter(Subject == Subj)
     
     if(exists("dataTELEOri")) {
-      dftele <- dataTELEOri %>% filter(Subj == Subj)
+      dftele <- dataTELEOri %>% filter(Subject == Subj)
     }
  
     offset <- dminutes(30) ## offset of time labels location. 
