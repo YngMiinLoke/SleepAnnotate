@@ -24,7 +24,7 @@ dataTelraw <- read.csv(paste0(Dir,"ExampleData/", "TELE.csv"))
 
 ####### Clean up Wake Time Diary
 ## Fill empty cells with Subject Code
-dataWT <- dataWTraw %>% mutate(Subj = ifelse(Subj == "", NA, Subj)) %>% fill(Subj)
+dataWT <- dataWTraw %>% mutate(Subject = ifelse(Subject == "", NA, Subject)) %>% fill(Subject)
 
 ## Convert "WTSelectedDate" to date
 dataWT <- dataWT %>%
@@ -50,15 +50,15 @@ dataWT <- dataWT %>%
   mutate(wake = ymd_hm(paste0(WTSelectedDate, " ", wt), tz = "Asia/Singapore"))
 
 ## Retain selected columns
-dataWT <- dataWT %>% select(Subj,WTSelectedDate,sleep,wake)
+dataWT <- dataWT %>% select(Subject,WTSelectedDate,sleep,wake)
 
 
 ################################### BedTime Diary Cleaning ###################################
 ## Remove unwanted columns
-dataBT <- dataBTraw %>% select(Subj, BTSelectedDate, matches(".+Nap[1-5]{1}$"))
+dataBT <- dataBTraw %>% select(Subject, BTSelectedDate, matches(".+Nap[1-5]{1}$"))
 
 ## Fill empty cells with Subject Code
-dataBT <- dataBT %>% mutate(Subj = ifelse(Subj == "", NA, Subj)) %>% fill(Subj)
+dataBT <- dataBT %>% mutate(Subject = ifelse(Subject == "", NA, Subject)) %>% fill(Subject)
 
 ## Convert "BTSelectedDate" to date
 dataBT <- dataBT %>%
@@ -102,7 +102,7 @@ dataBT <- dataBT %>% mutate(
 )
 
 ## Remove unwanted columns 
-dataBT <- dataBT %>% select(Subj, BTSelectedDate, sleep, wake)
+dataBT <- dataBT %>% select(Subject, BTSelectedDate, sleep, wake)
 
 ################################### Telegram Cleaning ###################################
 ## Convert Telegram timings into Date Time object
@@ -113,7 +113,7 @@ dataTel <- dataTelraw %>% mutate(
 )
 
 ## Remove unwanted columns 
-dataTel <- dataTel %>% select(Subj, sleep, wake)
+dataTel <- dataTel %>% select(Subject, sleep, wake)
 
 ################################### Save files ###################################
 
