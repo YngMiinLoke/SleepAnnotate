@@ -8,7 +8,7 @@ rm(list = ls())
 
 ################################### User's input needed ###################################
 
-svfile = 0 ## Do you want to save the output?
+svfile = 1 ## Do you want to save the output?
 
 ## Modify working directory
 Dir <- "./"
@@ -17,8 +17,8 @@ Dir <- "./"
 outDir <- "./ExampleOutput/"
 
 ## Read in cleaned BT & WT Diary with timestamps from Step 1
-dataBTOri <- read.csv(paste0(Dir, "ExampleData/", "BT_Timestamp.csv"))
-dataWTOri <- read.csv(paste0(Dir, "ExampleData/", "WT_Timestamp.csv"))
+dataBTOri <- read.csv(paste0(Dir, "ExampleData/", "BT_Timestamp_2022-02-14.csv"))
+dataWTOri <- read.csv(paste0(Dir, "ExampleData/", "WT_Timestamp_2022-02-14.csv"))
 
 ## Standardize naming of the column, rename({NewName} = {OldName}), (comment this if your column is already named as "sleep" and "wake")
 dataBTOri <- dataBTOri %>% rename(Subject = Subject,
@@ -30,7 +30,7 @@ dataWTOri <- dataWTOri %>% rename(Subject = Subject,
 
 ######## ------- Comment this out if there is no Telegram input) ------- ########
 ## Read in Telegram csv with timestamps from Step 1
-dataTELEOri <- read.csv(paste0(Dir, "ExampleData/", "TELE_Timestamp.csv"))
+dataTELEOri <- read.csv(paste0(Dir, "ExampleData/", "TELE_Timestamp_2022-02-14.csv"))
 
 ## (Comment this out if there is no Telegram input)
 dataTELEOri <- dataTELEOri %>% rename(sleep = sleep,
