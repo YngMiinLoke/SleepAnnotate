@@ -16,6 +16,8 @@ Dir <- "./"
 
 setwd(Dir) ## Set working directory
 
+outDate <- Sys.Date()
+
 dataWTraw <- read.csv(paste0(Dir,"ExampleData/", "WT.csv"))
 dataBTraw <- read.csv(paste0(Dir,"ExampleData/", "BT.csv"))
 dataTelraw <- read.csv(paste0(Dir,"ExampleData/", "TELE.csv"))
@@ -119,7 +121,7 @@ dataTel <- dataTel %>% select(Subject, sleep, wake)
 
 ## Save the cleaned Diary
 if (svfile == 1) {
-  write.table(dataWT, paste0(Dir, "ExampleData/", "WT_Timestamp.csv"), sep = ",", row.names = FALSE)
-  write.table(dataBT, paste0(Dir, "ExampleData/", "BT_Timestamp.csv"), sep = ",", row.names = FALSE)
-  write.table(dataTel, paste0(Dir, "ExampleData/", "TELE_Timestamp.csv"), sep = ",", row.names = FALSE)
+  write.table(dataWT, paste0(Dir, "ExampleData/", "WT_Timestamp_", outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataBT, paste0(Dir, "ExampleData/", "BT_Timestamp_", outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataTel, paste0(Dir, "ExampleData/", "TELE_Timestamp_", outDate, ".csv"), sep = ",", row.names = FALSE)
 }
