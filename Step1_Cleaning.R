@@ -24,6 +24,8 @@ setwd(Dir) ## Set working directory
 
 outDate <- Sys.Date()
 
+subjrange <- "S001-S002"
+
 dataWTraw <- read.csv(paste0(Dir,"ExampleData/", "WakeTimeDiary.csv"))
 dataBTraw <- read.csv(paste0(Dir,"ExampleData/", "BedtimeDiary.csv"))
 dataTelraw <- read.csv(paste0(Dir,"ExampleData/", "Telegram.csv"))
@@ -148,8 +150,8 @@ dataTel <- dataTel %>% select(Subject, sleep, wake)
 
 ## Save the cleaned Diary
 if (svfile == 1) {
-  write.table(dataWT, paste0(Dir, "ExampleData/", "NocSleep_Timestamp_", outDate, ".csv"), sep = ",", row.names = FALSE)
-  write.table(dataClass, paste0(Dir, "ExampleData/", "Class_Timestamp_", outDate, ".csv"), sep = ",", row.names = FALSE)
-  write.table(dataNap, paste0(Dir, "ExampleData/", "Nap_Timestamp_", outDate, ".csv"), sep = ",", row.names = FALSE)
-  write.table(dataTel, paste0(Dir, "ExampleData/", "Telegram_Timestamp_", outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataWT, paste0(Dir, "ExampleData/", "NocSleep_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataClass, paste0(Dir, "ExampleData/", "Class_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataNap, paste0(Dir, "ExampleData/", "Nap_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataTel, paste0(Dir, "ExampleData/", "Telegram_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
 }
