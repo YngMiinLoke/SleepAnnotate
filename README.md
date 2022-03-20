@@ -9,3 +9,4 @@ Our lab usually holds a consensus meeting to decide whether we should use mark a
 
 First, clean up diary data and save the sleep and wake timestamps in csv files using *Step1_Cleaning.R*. Edit this script to fit the date and time formats in the diary. Secondly, run *Step2_SleepAnnotate.R* to read in the csv files containing sleep/wake timestamps produced in the first step. The figures containing activity counts and sleep/wake timings for each participants will be printed in the output directory.
 
+## Test adding SOL branch
