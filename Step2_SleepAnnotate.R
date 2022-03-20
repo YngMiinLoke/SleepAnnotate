@@ -18,7 +18,7 @@ rm(list = ls())
 
 ################################### User's input needed ###################################
 
-svfile = 0 ## Do you want to save the output?
+svfile = 1 ## Do you want to save the output?
 
 ## Modify working directory
 Dir <- "./"
@@ -108,7 +108,7 @@ if(exists("dataTELEOri")) {
            wake = ymd_hms(wake, tz = "Asia/Singapore"))
 }
 
-Subj <- "S002" #For script testing only
+Subj <- "S001" #For script testing only
 for (Subj in subjList) {
   tryCatch({
     print(paste0("Making figures for subject ", Subj))
