@@ -41,11 +41,9 @@ dataWT <- dataWT %>%
   mutate(WTSelectedDate = dmy(WTSelectedDate))
 
 ## Convert AM/PM to 24Hr time
-dataWT <- dataWT %>% 
-  mutate(bt = paste0(Bedtime, " ", BedtimeAMPM),
-         wt = paste0(WakeTime, " ", WakeTimeAMPM)) %>%
-  mutate(bt = format(strptime(bt, "%I:%M %p"), "%H:%M"),
-         wt = format(strptime(wt, "%I:%M %p"), "%H:%M"))
+dataWT <- dataWT %>%
+  mutate(bt = format(strptime(Bedtime, "%I:%M %p"), "%H:%M"),
+         wt = format(strptime(WakeTime, "%I:%M %p"), "%H:%M"))
 
 ## Infer the dates for bedtime
 ## Arbitrarily set cutoff at 1700, any bedtime > 1700, subtract 1 day from participant selected WT Date
@@ -150,8 +148,8 @@ dataTel <- dataTel %>% select(Subject, sleep, wake)
 
 ## Save the cleaned Diary
 if (svfile == 1) {
-  write.table(dataWT, paste0(Dir, "ExampleData/", "NocSleep_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
-  write.table(dataClass, paste0(Dir, "ExampleData/", "Class_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
-  write.table(dataNap, paste0(Dir, "ExampleData/", "Nap_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
-  write.table(dataTel, paste0(Dir, "ExampleData/", "Telegram_Timestamp_", subjrange, outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataWT, paste0(Dir, "ExampleData/", "NocSleep_Timestamp_", subjrange, "_", outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataClass, paste0(Dir, "ExampleData/", "Class_Timestamp_", subjrange, "_", outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataNap, paste0(Dir, "ExampleData/", "Nap_Timestamp_", subjrange, "_", outDate, ".csv"), sep = ",", row.names = FALSE)
+  write.table(dataTel, paste0(Dir, "ExampleData/", "Telegram_Timestamp_", subjrange, "_", outDate, ".csv"), sep = ",", row.names = FALSE)
 }
