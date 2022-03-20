@@ -18,7 +18,7 @@ rm(list = ls())
 
 ################################### User's input needed ###################################
 
-svfile = 1 ## Do you want to save the output?
+svfile = 0 ## Do you want to save the output?
 
 ## Modify working directory
 Dir <- "./"
@@ -27,9 +27,9 @@ Dir <- "./"
 outDir <- "./ExampleOutput/"
 
 ## Read in cleaned timestamps from Step 1
-dataNapOri <- read.csv(paste0(Dir, "ExampleData/", "Nap_Timestamp_2022-03-13.csv"))
-dataClassOri <- read.csv(paste0(Dir, "ExampleData/", "Class_Timestamp_2022-03-13.csv"))
-dataNocSleepOri <- read.csv(paste0(Dir, "ExampleData/", "NocSleep_Timestamp_2022-03-13.csv"))
+dataNapOri <- read.csv(paste0(Dir, "ExampleData/", "Nap_Timestamp_S001-S002_2022-03-20.csv"))
+dataClassOri <- read.csv(paste0(Dir, "ExampleData/", "Class_Timestamp_S001-S002_2022-03-20.csv"))
+dataNocSleepOri <- read.csv(paste0(Dir, "ExampleData/", "NocSleep_Timestamp_S001-S002_2022-03-20.csv"))
 
 ## Standardize naming of the column, rename({NewName} = {OldName}), (comment this if your column is already named as "sleep" and "wake")
 dataNapOri <- dataNapOri %>% rename(Subject = Subject,
@@ -45,14 +45,14 @@ dataNocSleepOri <- dataNocSleepOri %>% rename(Subject = Subject,
                                               SleepLatency = SleepLatency ## Comment this line and the comma above if you don't have Sleep Latency information
 )  
 
-######## ------- Comment this out if there is no Telegram input) ------- ########
+######## ------- Comment this section if there is no Telegram input) ------- ########
 ## Read in Telegram csv with timestamps from Step 1
-dataTELEOri <- read.csv(paste0(Dir, "ExampleData/", "Telegram_Timestamp_2022-03-13.csv"))
+dataTELEOri <- read.csv(paste0(Dir, "ExampleData/", "Telegram_Timestamp_S001-S002_2022-03-20.csv"))
 
 ## (Comment this out if there is no Telegram input)
 dataTELEOri <- dataTELEOri %>% rename(sleep = sleep,
                                       wake = wake)
-######## ------- Comment this out if there is no Telegram input) ------- ########
+######## ------- Comment this section if there is no Telegram input) ------- ########
 
 ## Input a list of subjects
 subjList <- paste0("S", str_pad(c(1:2), width = 3, pad = "0"))
@@ -91,6 +91,16 @@ dataNapOri <- dataNapOri %>%
 dataNocSleepOri <- dataNocSleepOri %>%
   mutate(sleep = ymd_hms(sleep, tz = "Asia/Singapore"),
          wake = ymd_hms(wake, tz = "Asia/Singapore"))
+
+if(exists("dataClassOri")) {
+  dataClassOri <- dataClassOri %>%
+    mutate(FirstClassStart = ymd_hms(FirstClassStart, tz = "Asia/Singapore"))
+  
+  dataClassOri <- dataClassOri %>% mutate(
+    ClassMode = factor(ClassMode, ordered = FALSE, levels = c("InPerson", "Online"))
+  )
+
+}
 
 if(exists("dataTELEOri")) {
   dataTELEOri <- dataTELEOri %>%
@@ -292,6 +302,13 @@ for (Subj in subjList) {
     ## Curb the activity count at the cutoff specified (default = 4000)
     dfacti <- dfacti %>% mutate(acticountadj = ifelse(acticount > acticutoff, acticutoff, acticount))
     
+    #################### Process class start time ####################
+    dfclass <- dataClassOri %>% filter(Subject == Subj)
+    
+    ## Set linetypes
+    linetypeCode = c("InPerson" = "solid", "Online" = "dotted")
+    
+    
     #################### Prepare time period for each strip of figure ####################
     ## Pad the dataActi to always start and end at plotcutoff (the previous day/ the next day) to facilitate plotting
     uu <- unique(date(dfacti$datetime))
@@ -315,7 +332,7 @@ for (Subj in subjList) {
     ssl <- as.list(as.data.frame(ssm)) ## list of date ranges to be filtered
     
     #################### Plotting starts now ####################
-    #j <- ssl[[1]] #For testing only
+    j <- ssl[[7]] #For testing only
     pActi <- lapply(ssl, function(j) {
       
       ## filter each date range from the ssl list
@@ -350,6 +367,13 @@ for (Subj in subjList) {
         
       }
       
+      if(exists("dfclass")) {
+        if(dim(dfclass)[1] > 0) {
+          dfclass <- dfclass %>%
+            filter(FirstClassStart >= ymd_hms(j[1],  tz = "Asia/Singapore") & FirstClassStart <= ymd_hms(j[2], tz = "Asia/Singapore"))
+        }
+      }
+      
       ## Determine the x-axis limits for plotting
       xlm1 <- ymd_hms(j[1], tz = "Asia/Singapore")
       xlm2 <- ymd_hms(j[2], tz = "Asia/Singapore")
@@ -382,9 +406,18 @@ for (Subj in subjList) {
         }
       }
       
+      if(exists("dfclass")) {
+        if (dim(dfclass)[1] > 0) {
+          pActi <- pActi +
+            geom_segment(data = dfclass, mapping = aes(x = FirstClassStart, y = 4000, xend = FirstClassStart, yend = 5000, linetype = ClassMode), size = 0.5)
+        }
+      }
+      
+      
       ## Add layers of other styling
       pActi <- pActi + scale_fill_manual(values = colCode) +
         scale_color_manual(values = colCode) +
+        scale_linetype_manual(values = linetypeCode) +
         theme_gray() +
         theme(axis.title.x = element_blank(),
               axis.title.y = element_blank(),
