@@ -14,11 +14,18 @@ In the above image, red markings denote the diary-reported sleep/wake timings, w
 
 
 The *SleepAnnotate* also plots the nap timings (markings in pine green) and first class start time (markings in purple) which participants reported in their diary:
+
 <img width="652" alt="img03" src="https://user-images.githubusercontent.com/99003122/161434075-ff66e0b3-f976-4a90-a210-283d5ff0e9fa.png">
 
-Our lab usually holds a consensus meeting to decide on participants' sleep-wake timings. Using the *SleepAnnotate*, the lab members can visualize all the sleep/wake timings together with the underlying activity patterns to make a decision on where the actual sleep period should be.
+Our lab usually holds a consensus meeting to decide on participants' sleep-wake timings. Using the *SleepAnnotate*, the lab members can visualize diary- and Telegram-reported sleep/wake timings overlaid on participant's activity patterns to make a decision on where the actual sleep period should be.
 
 ### How to use this script
 
-First, clean up diary data and save the sleep and wake timestamps in csv files using *Step1_Cleaning.R*. Edit this script to fit the date and time formats in the diary. Secondly, run *Step2_SleepAnnotate.R* to read in the csv files containing sleep/wake timestamps produced in the first step. The figures containing activity counts and sleep/wake timings for each participants will be printed in the output directory.
+You will need to supply four csv files as input to the Step2_SleepAnnotate.R
 
+1. NocSleep_Timestamp.csv
+2. Nap_Timestamp.csv
+3. Class_Timestamp.csv
+4. Telegram_Timestamp.csv
+
+Please refer to the ExampleDate folder to see how they should be structured. You can also refer to the *Step1_Cleaning.R* script to see how we can clean up the Bedtime and Wake Time Diaries to output these four spreadsheets.
