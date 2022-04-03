@@ -12,7 +12,8 @@ The *SleepAnnotate* reads in csv files of participants' activity count, sleep-wa
 <img width="646" alt="img02" src="https://user-images.githubusercontent.com/99003122/161433876-dd30f604-3344-447b-9f27-d46ea9bedcc2.png">
 In the above image, red markings denote the diary-reported sleep/wake timings, while the orange markings denote the Telegram sleep/wake timestamps.
 
-The *SleepAnnotate* also plots the nap timings and first class start time which participants reported in diary:
+
+The *SleepAnnotate* also plots the nap timings (markings in pine green) and first class start time (markings in purple) which participants reported in their diary:
 <img width="652" alt="img03" src="https://user-images.githubusercontent.com/99003122/161434075-ff66e0b3-f976-4a90-a210-283d5ff0e9fa.png">
 
 Our lab usually holds a consensus meeting to decide on participants' sleep-wake timings. Using the *SleepAnnotate*, the lab members can visualize all the sleep/wake timings together with the underlying activity patterns to make a decision on where the actual sleep period should be.
