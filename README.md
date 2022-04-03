@@ -10,7 +10,7 @@ To calculate various sleep parameters, we will need to mark participant-reported
 The *SleepAnnotate* reads in csv files of participants' activity counts, sleep-wake diaries, and Telegram messages. It then processes the timestamps using lubridates package in R; and plot the sleep/wake timings onto the activity plots using the ggplot2 package:
 
 <img width="646" alt="img02" src="https://user-images.githubusercontent.com/99003122/161433876-dd30f604-3344-447b-9f27-d46ea9bedcc2.png">
-In the above image, red markings denote the diary-reported sleep/wake timings, while the orange markings denote the Telegram sleep/wake timestamps.
+In the above image, red markings denote the diary-reported sleep/wake timings, while the orange markings denote the Telegram sleep/wake timestamps.The translucent red patch that follows the diary-reported sleep time (red marking on the left) denotes participant's sleep onset latency.
 
 
 The *SleepAnnotate* also plots the nap timings (markings in pine green) and first class start time (markings in purple) which participants reported in their diary:
