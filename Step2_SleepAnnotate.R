@@ -110,7 +110,7 @@ if(exists("dataTELEOri")) {
            wake = ymd_hms(wake, tz = "Asia/Singapore"))
 }
 
-#Subj <- "S001" #For script testing only
+Subj <- "S001" #For script testing only
 for (Subj in subjList) {
   tryCatch({
     print(paste0("Making figures for subject ", Subj))
@@ -434,7 +434,7 @@ for (Subj in subjList) {
               legend.position = "none",
               panel.grid.minor = element_blank(),
               #plot.background = element_rect(colour = "black"),
-              plot.margin = unit(c(0,0.5,0.5,0.5), "points")
+              plot.margin = margin(t=0,r=5.5,b=5.5,l=5.5)
         ) +
         scale_y_continuous(limits = c(0,5400), breaks = seq(0,4000,4000)) +
         coord_cartesian(xlim = c(xlm1,xlm2), clip = 'off')
