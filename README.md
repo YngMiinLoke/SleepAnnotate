@@ -10,8 +10,12 @@ To calculate various sleep parameters, we will need to mark participant-reported
 The *SleepAnnotate* reads in csv files of participants' activity count, sleep-wake diaries, and telegrams; process the timestamps using lubridates package in R; and plot the sleep/wake timings onto the activity plots:
 
 <img width="646" alt="img02" src="https://user-images.githubusercontent.com/99003122/161433876-dd30f604-3344-447b-9f27-d46ea9bedcc2.png">
+In the above image, red markings denote the diary-reported sleep/wake timings, while the orange markings denote the Telegram sleep/wake timestamps.
 
-Our lab usually holds a consensus meeting to decide whether we should use mark a specific sleep period using. This way, the lab members can visualize all the sleep/wake timings together with the underlying activity patterns to make a decision on where the actual sleep period should be.
+The *SleepAnnotate* also plots the nap timings and first class start time which participants reported in diary:
+<img width="652" alt="img03" src="https://user-images.githubusercontent.com/99003122/161434075-ff66e0b3-f976-4a90-a210-283d5ff0e9fa.png">
+
+Our lab usually holds a consensus meeting to decide on participants' sleep-wake timings. Using the *SleepAnnotate*, the lab members can visualize all the sleep/wake timings together with the underlying activity patterns to make a decision on where the actual sleep period should be.
 
 ### How to use this script
 
