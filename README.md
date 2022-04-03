@@ -2,7 +2,9 @@
 This script helps to annotate participant-reported sleep/wake timings into their activity count figures
 
 In sleep research, we often employ activity monitors to record participants' activity patterns throughout the day. Here's an example of the activity counts collected by actigraphy watch:
+
 ![Example of an actiwatch data](https://github.com/YngMiinLoke/SleepAnnotate/main/ExampleDate/img01.png)
+<img width="652" alt="img01" src="https://user-images.githubusercontent.com/99003122/161433468-c62f0d98-a7fa-458b-b83e-0755d42f86b7.png">
 
 To calculate various sleep parameters, we will need to mark participant-reported sleep/wake periods in the sleep scoring software for it to output the sleep parameters. However, self-reported sleep/wake timings may not always be accurate, and researchers may decide to ignore one's self-reported timings and follow the change in activity patterns instead. Apart from reporting their sleep/wake timings, participants are sometimes asked to send a text message (e.g. Telegram) when they go to bed and when they wake up. These timestamps from text messages can also help researchers to decide where the sleep period(s) should be marked. 
 
