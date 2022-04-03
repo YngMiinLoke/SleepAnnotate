@@ -4,9 +4,7 @@
 ## Added SOL
 ## 16MAR2022
 ## Let user decide the range of day to be printed, annotate Subject Number and Week Number on top of the figures
-
-## Pending
-## whether participant slept that night, ## Did not sleep how to structure it in?
+## 03APR2022
 ## Added First Class Start Time and Tardiness
 
 
