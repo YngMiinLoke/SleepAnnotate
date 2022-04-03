@@ -30,31 +30,31 @@ outDir <- "./ExampleOutput/"
 dataNapOri <- read.csv(paste0(Dir, "ExampleData/", "Nap_Timestamp_S001-S002_2022-03-20.csv"))
 dataClassOri <- read.csv(paste0(Dir, "ExampleData/", "Class_Timestamp_S001-S002_2022-03-20.csv"))
 dataNocSleepOri <- read.csv(paste0(Dir, "ExampleData/", "NocSleep_Timestamp_S001-S002_2022-03-20.csv"))
+dataTELEOri <- read.csv(paste0(Dir, "ExampleData/", "Telegram_Timestamp_S001-S002_2022-03-20.csv")) ## Comment this line if there is no Telegram input
 
-## Standardize naming of the column, rename({NewName} = {OldName}), (comment this if your column is already named as "sleep" and "wake")
+## Standardize naming of the column, rename({NewName} = {OldName})
 dataNapOri <- dataNapOri %>% rename(Subject = Subject,
                                     BTSelectedDate = BTSelectedDate,
                                     sleep = sleep,
                                     wake = wake)
+
+dataClassOri <- dataClassOri %>% rename(Subject = Subject,
+                                        ClassMode = ClassMode,
+                                        FirstClassStart = FirstClassStart,
+                                        Tardiness = Tardiness)
 
 dataNocSleepOri <- dataNocSleepOri %>% rename(Subject = Subject,
                                               WTSelectedDate = WTSelectedDate,
                                               AnySleep = AnySleep,
                                               sleep = sleep,
                                               wake = wake,
-                                              SleepLatency = SleepLatency ## Comment this line and the comma above if you don't have Sleep Latency information
-)  
+                                              SleepLatency = SleepLatency) ## Comment this line and the comma above if you don't have Sleep Latency information
 
-######## ------- Comment this section if there is no Telegram input) ------- ########
-## Read in Telegram csv with timestamps from Step 1
-dataTELEOri <- read.csv(paste0(Dir, "ExampleData/", "Telegram_Timestamp_S001-S002_2022-03-20.csv"))
-
-## (Comment this out if there is no Telegram input)
+## Comment this section if there is no Telegram input
 dataTELEOri <- dataTELEOri %>% rename(sleep = sleep,
                                       wake = wake)
-######## ------- Comment this section if there is no Telegram input) ------- ########
 
-## Input a list of subjects
+## Input a list of subjects in the first argument of str_pad
 subjList <- paste0("S", str_pad(c(1:2), width = 3, pad = "0"))
 
 ## Input activity count cutoff
@@ -305,9 +305,10 @@ for (Subj in subjList) {
     #################### Process class start time ####################
     dfclass <- dataClassOri %>% filter(Subject == Subj)
     
-    ## Set linetypes
-    linetypeCode = c("InPerson" = "solid", "Online" = "dotted")
-    
+    if("Tardiness" %in% colnames(dfclass)) {
+      ## Set linetypes
+      linetypeCode = c("InPerson" = "solid", "Online" = 11)
+    }
     
     #################### Prepare time period for each strip of figure ####################
     ## Pad the dataActi to always start and end at plotcutoff (the previous day/ the next day) to facilitate plotting
@@ -332,7 +333,7 @@ for (Subj in subjList) {
     ssl <- as.list(as.data.frame(ssm)) ## list of date ranges to be filtered
     
     #################### Plotting starts now ####################
-    j <- ssl[[7]] #For testing only
+    j <- ssl[[6]] #For testing only
     pActi <- lapply(ssl, function(j) {
       
       ## filter each date range from the ssl list
@@ -390,6 +391,7 @@ for (Subj in subjList) {
                  stat="identity", fill = "#0f02ff") +
         annotate("text", x = ddl.loc, y = 2500, label = ddl, size = 2, colour = "purple") +
         annotate("text", x = ddr.loc, y = 2500, label = ddr, size = 2, colour = "purple")
+    
       
       if(exists("dfSOLw")) {
         if (dim(dfSOLw)[1] > 0) {
@@ -409,10 +411,14 @@ for (Subj in subjList) {
       if(exists("dfclass")) {
         if (dim(dfclass)[1] > 0) {
           pActi <- pActi +
-            geom_segment(data = dfclass, mapping = aes(x = FirstClassStart, y = 4000, xend = FirstClassStart, yend = 5000, linetype = ClassMode), size = 0.5)
+            geom_segment(data = dfclass, mapping = aes(x = FirstClassStart, y = 4000, xend = FirstClassStart, yend = 5000, linetype = ClassMode), colour = "#6A3D9A", size = 0.5)
+          
+          if("Tardiness" %in% colnames(dfclass)) {
+            pActi <- pActi +
+              geom_text(data = dfclass, mapping = aes(x = FirstClassStart, y = 5300, label = Tardiness), colour = "#6A3D9A", size = 2)
+          }
         }
       }
-      
       
       ## Add layers of other styling
       pActi <- pActi + scale_fill_manual(values = colCode) +
@@ -424,10 +430,11 @@ for (Subj in subjList) {
               axis.text.x = element_text(color = "black", size = 8),
               axis.text.y = element_text(color = "black", size = 8),
               legend.position = "none",
-              panel.grid.minor = element_blank()#,
-              #plot.margin = unit(c(0,5,0,5), "lines")
+              panel.grid.minor = element_blank(),
+              #plot.background = element_rect(colour = "black"),
+              plot.margin = unit(c(0,0.5,0.5,0.5), "points")
         ) +
-        scale_y_continuous(limits = c(0,5000), breaks = seq(0,4000,4000)) +
+        scale_y_continuous(limits = c(0,5400), breaks = seq(0,4000,4000)) +
         coord_cartesian(xlim = c(xlm1,xlm2), clip = 'off')
       
     })
