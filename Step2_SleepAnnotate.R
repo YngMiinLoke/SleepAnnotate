@@ -455,7 +455,7 @@ for (Subj in subjList) {
                                                 top = text_grob(paste0(Subj, "  Week ",i))))
       
       if (svfile == 1) {
-        jpeg(paste0(outDir, Subj, "_Week", i, ".jpg"), units="in", width=10, height=5.625, res=200)
+        jpeg(paste0(outDir, Subj, "_Week", i, ".jpg"), units="in", width=10, height=5.625, res=300)
         print(get(paste0("pWeek",i)))
         dev.off()
       }
