@@ -57,8 +57,10 @@ dataTELEOri <- dataTELEOri %>% rename(sleep = sleep,
 ## Input a list of subjects in the first argument of str_pad
 subjList <- paste0("S", str_pad(c(1:2), width = 3, pad = "0"))
 
-## Input activity count cutoff
+## Input activity file format and activitiy count cutoff
 ActiDir <- "./ExampleData/"
+ActifileSuffix <- "_all epoch.csv"
+ActiSkipLines <- 3
 acticutoff <- 4000
 
 ## Input colours of annotation
@@ -108,15 +110,15 @@ if(exists("dataTELEOri")) {
            wake = ymd_hms(wake, tz = "Asia/Singapore"))
 }
 
-Subj <- "S001" #For script testing only
+#Subj <- "S001" #For script testing only
 for (Subj in subjList) {
   tryCatch({
     print(paste0("Making figures for subject ", Subj))
-    rm(list=setdiff(ls(), c("acticutoff","ActiDir","dataClassOri","dataNapOri","dataNocSleepOri","dataTELEOri","Dir","napcolor","outDir",
+    rm(list=setdiff(ls(), c("acticutoff","ActiDir","ActifileSuffix","ActiSkipLines","dataClassOri","dataNapOri","dataNocSleepOri","dataTELEOri","Dir","napcolor","outDir",
                             "plotcutoff","sleepcolor","stripend","stripstart","Subj","subjList","svfile","telcolor")))
     
     ################################### Read in actigraphy data for this subject ###################################
-    dataActi <- read.csv(paste0(ActiDir, Subj, "_all epoch.csv"), skip = 3)
+    dataActi <- read.csv(paste0(ActiDir, Subj, ActifileSuffix), skip = ActiSkipLines)
     
     ## Format Date and Time and date-time object
     dataActi <- dataActi %>% mutate(DateTime = paste0(Date, " ", Time)) %>% mutate(DateTime = dmy_hm(DateTime, tz = "Asia/Singapore")) 
@@ -333,7 +335,7 @@ for (Subj in subjList) {
     ssl <- as.list(as.data.frame(ssm)) ## list of date ranges to be filtered
     
     #################### Plotting starts now ####################
-    j <- ssl[[6]] #For testing only
+    #j <- ssl[[6]] #For testing only
     pActi <- lapply(ssl, function(j) {
       
       ## filter each date range from the ssl list
