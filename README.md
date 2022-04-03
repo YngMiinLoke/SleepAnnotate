@@ -1,7 +1,7 @@
 # SleepAnnonate
 This script helps to annotate participant-reported sleep/wake timings onto their activity count figures
 
-In sleep research, we often employ activity monitors to record participants' activity patterns throughout the day. Here's an example of the activity counts collected by actigraphy watch:
+In sleep research, we often employ activity monitors to record participants' activity patterns throughout the day. Here's an example of the activity counts collected by an actigraphy watch:
 
 <img width="652" alt="img01" src="https://user-images.githubusercontent.com/99003122/161433468-c62f0d98-a7fa-458b-b83e-0755d42f86b7.png">
 
