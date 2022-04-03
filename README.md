@@ -5,7 +5,7 @@ In sleep research, we often employ activity monitors to record participants' act
 
 <img width="652" alt="img01" src="https://user-images.githubusercontent.com/99003122/161433468-c62f0d98-a7fa-458b-b83e-0755d42f86b7.png">
 
-To calculate various sleep parameters, we will need to mark participant-reported sleep/wake periods in the sleep scoring software for it to output the sleep parameters. Our lab instructed participants to fill up their sleep and wake time in daily diary. Apart from the daily diary, we also asked the participants to send a text message (Telegram) when they go to bed and when they wake up. However, self-reported sleep/wake timings may not be always accurate, and researchers may decide the sleep-wake periods based on a combination of participant's self-reported timing, Telegram timestamps, or change in activity counts.
+To calculate various sleep parameters, we will need to mark participant-reported sleep/wake periods in the sleep scoring software for it to output the sleep parameters. Our lab instructed participants to fill up their sleep and wake time in a daily diary. Apart from the daily diary, we also asked the participants to send a text message (Telegram) when they go to bed and when they wake up. However, self-reported sleep/wake timings may not be always accurate, and researchers may decide the sleep-wake periods based on a combination of participant's self-reported timing, Telegram timestamps, or change in activity counts.
 
 The *SleepAnnotate* reads in csv files of participants' activity count, sleep-wake diaries, and telegrams; process the timestamps using lubridates package in R; and plot the sleep/wake timings onto the activity plots:
 
