@@ -17,7 +17,7 @@ The *SleepAnnotate* also plots the nap timings (markings in pine green) and firs
 
 <img width="652" alt="img03" src="https://user-images.githubusercontent.com/99003122/161434075-ff66e0b3-f976-4a90-a210-283d5ff0e9fa.png">
 
-Our lab usually holds a consensus meeting to decide on participants' sleep-wake timings. Using the *SleepAnnotate*, the lab members can visualize diary- and Telegram-reported sleep/wake timings overlaid on participant's activity patterns to make a decision on where the actual sleep period should be.
+Our lab usually holds a consensus meeting to decide on participants' sleep-wake timings. Using *SleepAnnotate*, the lab members can visualize diary- and Telegram-reported sleep/wake timings overlaid on participant's activity patterns to make a decision on where the actual sleep period should be.
 
 ### How to use this script
 
