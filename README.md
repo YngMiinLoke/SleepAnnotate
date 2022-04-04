@@ -21,11 +21,11 @@ Our lab usually holds a consensus meeting to decide on participants' sleep-wake 
 
 ### How to use this script
 
-You will need to supply four csv files as input to the Step2_SleepAnnotate.R
+You will need to provide four csv files as input to the *Step2_SleepAnnotate.R*
 
 1. NocSleep_Timestamp.csv
 2. Nap_Timestamp.csv
 3. Class_Timestamp.csv
 4. Telegram_Timestamp.csv
 
-You can omit no. 3 and no. 4 if your lab doesn't collect first class start time and Telegram timestamps. Please refer to the ExampleData folder to see how the input csv should be structured. You can also refer to the *Step1_Cleaning.R* script to see how we can clean up the Bedtime and Wake Time Diaries to produce these spreadsheets.
+You can omit no. 3 and no. 4 if your lab doesn't collect first class start time and Telegram timestamps. Please refer to the ExampleData folder to see how the input csv should be structured. You can also refer to the *Step1_Cleaning.R* script to see how to clean up Bedtime and Wake Time Diaries to produce these input spreadsheets.
