@@ -16,7 +16,7 @@ rm(list = ls())
 
 ################################### User's input needed ###################################
 
-svfile = 0 ## Do you want to save the output?
+svfile = 1 ## Do you want to save the output?
 
 ## Modify working directory
 Dir <- "./"
@@ -56,25 +56,25 @@ dataTELEOri <- dataTELEOri %>% rename(sleep = sleep,
 subjList <- paste0("S", str_pad(c(1:2), width = 3, pad = "0"))
 
 ## Input activity file format and activitiy count cutoff
-ActiDir <- "./ExampleData/"
-ActifileSuffix <- "_all epoch.csv"
-ActiSkipLines <- 3
-acticutoff <- 4000
+ActiDir <- "./ExampleData/"             # folder where all the individual epoch csv are stored
+ActifileSuffix <- "_all epoch.csv"      # filename suffix that follows the subject code
+ActiSkipLines <- 3                      # how many lines to be skipped before header row
+acticutoff <- 4000                      # cutoff for activity count, 4000 for ActiLife
 
 ## Input colours of annotation
-sleepcolor <- "#c91230" #carmine red
-napcolor <- "#2e514d" #pine green
-telcolor <- "#e28743" #vibrant honey
+sleepcolor <- "#c91230"                 # carmine red
+napcolor <- "#2e514d"                   # pine green
+telcolor <- "#e28743"                   # vibrant honey
 
 ## Input cutoff of plot (For ActiGraph, each "strip" of plot starts from 12:00:00 of one day to 12:00:00 of the next day)
-plotcutoff <- 12 # Please only input integer (hour)
+plotcutoff <- 12                        # Please only input integer (hour)
 
 ## Input the range of day to be printed
 ## For example, if you initialize the watches one day before data collection, you can start from day 2
 ## A day starts and ends at plotcutoff input above (e.g. plotcutoff = 12, then a day will start at 12:00:00 and ends at 12:00:00 the next day)
 
-stripstart <- 1  # Please only input integer
-stripend <- NULL ## Leave stripend as NULL if you want to print till the end of the activity data.
+stripstart <- 1                         # Please only input integer
+stripend <- NULL                        # Leave it as NULL if you want to print till the end of the activity data.
 
 ################################### Directory ###################################
 
