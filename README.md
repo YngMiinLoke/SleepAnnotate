@@ -21,7 +21,7 @@ Our lab usually holds a consensus meeting to decide on participants' sleep-wake 
 
 ### How to use this script
 
-You will need to provide four csv files as input to the *Step2_SleepAnnotate.R*
+You will need to extract individual epoch files from the Actigraphy scoring software. You will also need to provide four csv files as input to the *Step2_SleepAnnotate.R*
 
 1. NocSleep_Timestamp.csv
 2. Nap_Timestamp.csv
