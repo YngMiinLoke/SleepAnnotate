@@ -16,7 +16,7 @@ rm(list = ls())
 
 ################################### User's input needed ###################################
 
-svfile = 1 ## Do you want to save the output?
+svfile = 0 ## Do you want to save the output?
 
 ## Modify working directory
 Dir <- "./"
@@ -84,9 +84,12 @@ setwd(Dir) ## Set working directory
 dir.create(path = outDir, showWarnings = FALSE)
 
 ################################### Make DateTime Object ###################################
-dataNapOri <- dataNapOri %>%
-  mutate(sleep = ymd_hms(sleep, tz = "Asia/Singapore"),
-         wake = ymd_hms(wake, tz = "Asia/Singapore"))
+
+if(exists("dataNapOri")) {
+  dataNapOri <- dataNapOri %>%
+    mutate(sleep = ymd_hms(sleep, tz = "Asia/Singapore"),
+           wake = ymd_hms(wake, tz = "Asia/Singapore"))
+}
 
 dataNocSleepOri <- dataNocSleepOri %>%
   mutate(sleep = ymd_hms(sleep, tz = "Asia/Singapore"),
@@ -123,7 +126,10 @@ for (Subj in subjList) {
     
     # ################################### subset diaries ###################################
     dfsleep <- dataNocSleepOri %>% filter(Subject == Subj)
-    dfnap <- dataNapOri %>% filter(Subject == Subj)
+    
+    if(exists("dataNapOri")) {
+      dfnap <- dataNapOri %>% filter(Subject == Subj)
+    }
     
     if(exists("dataTELEOri")) {
       dftele <- dataTELEOri %>% filter(Subject == Subj)
@@ -250,37 +256,45 @@ for (Subj in subjList) {
     dfsleep <- dfsleep %>% mutate(type = "noc")
     
     #################### Process nap dataframe ####################
-    if(dim(dfnap)[1] > 0) {
-      
-      ## keep only these two columns
-      dfnap <- dfnap %>%
-        select(sleep, wake)
-      
-      dfnap <- dfnap %>% rename(
-        sleep.d.datetime = sleep,
-        wake.d.datetime = wake
-      )
-      
-      ## Create time labels (hh:mm)
-      dfnap <- dfnap %>% mutate(sleep.d.Lab = str_extract(as.character(sleep.d.datetime), "[[:digit:]]{2}:[[:digit:]]{2}"),
-                                wake.d.Lab = str_extract(as.character(wake.d.datetime), "[[:digit:]]{2}:[[:digit:]]{2}"))
-      
-      ## Determine label's location by subtracting the offset (30 mins) to prevent labels from overlapping with the time annotation
-      dfnap <- dfnap %>% mutate(sleep.d.Loc = sleep.d.datetime - offset,
-                                wake.d.Loc = wake.d.datetime + offset)
-      
-      dfnap <- dfnap %>% pivot_longer(cols = everything(), names_to = c("Genre", "Channel", ".value"), names_pattern = "(.+)\\.(.+)\\.(.+)")
-      
-      ## add one column to indicate type of sleep period
-      dfnap <- dfnap %>% mutate(type = "nap")
-      
+    if(exists("dfnap")) {
+      if(dim(dfnap)[1] > 0) {
+        
+        ## keep only these two columns
+        dfnap <- dfnap %>%
+          select(sleep, wake)
+        
+        dfnap <- dfnap %>% rename(
+          sleep.d.datetime = sleep,
+          wake.d.datetime = wake
+        )
+        
+        ## Create time labels (hh:mm)
+        dfnap <- dfnap %>% mutate(sleep.d.Lab = str_extract(as.character(sleep.d.datetime), "[[:digit:]]{2}:[[:digit:]]{2}"),
+                                  wake.d.Lab = str_extract(as.character(wake.d.datetime), "[[:digit:]]{2}:[[:digit:]]{2}"))
+        
+        ## Determine label's location by subtracting the offset (30 mins) to prevent labels from overlapping with the time annotation
+        dfnap <- dfnap %>% mutate(sleep.d.Loc = sleep.d.datetime - offset,
+                                  wake.d.Loc = wake.d.datetime + offset)
+        
+        dfnap <- dfnap %>% pivot_longer(cols = everything(), names_to = c("Genre", "Channel", ".value"), names_pattern = "(.+)\\.(.+)\\.(.+)")
+        
+        ## add one column to indicate type of sleep period
+        dfnap <- dfnap %>% mutate(type = "nap")
+        
+      }
     }
     
     #################### Combine dataframes ####################
     
-    dfSW <- rbind(if(dim(dfsleep)[1] > 0) dfsleep,
-                  if(dim(dfnap)[1] > 0) dfnap)
-    
+    if(exists("dfnap")) {
+      
+      dfSW <- rbind(if(dim(dfsleep)[1] > 0) dfsleep,
+                    if(dim(dfnap)[1] > 0) dfnap)
+      
+    } else {
+      dfSW <- dfsleep
+    }
+
     dfSW <- dfSW %>% mutate(fillcolor = case_when(
       Channel == "d" & type == "noc" ~ "noc",
       Channel == "t" & type == "noc" ~ "tel",
@@ -303,11 +317,16 @@ for (Subj in subjList) {
     dfacti <- dfacti %>% mutate(acticountadj = ifelse(acticount > acticutoff, acticutoff, acticount))
     
     #################### Process class start time ####################
-    dfclass <- dataClassOri %>% filter(Subject == Subj)
     
-    if("Tardiness" %in% colnames(dfclass)) {
-      ## Set linetypes
-      linetypeCode = c("InPerson" = "solid", "Online" = 11)
+    if(exists("dataClassOri")) {
+      
+      dfclass <- dataClassOri %>% filter(Subject == Subj)
+      
+      if("Tardiness" %in% colnames(dfclass)) {
+        ## Set linetypes
+        linetypeCode = c("InPerson" = "solid", "Online" = 11)
+      }
+      
     }
     
     #################### Prepare time period for each strip of figure ####################
@@ -389,33 +408,34 @@ for (Subj in subjList) {
       pActi <-  ggplot() +
         geom_bar(data = dfacti, mapping = aes(x = datetime, y = acticountadj),
                  stat="identity", fill = "#0f02ff") +
-        annotate("text", x = ddl.loc, y = 2500, label = ddl, size = 2, colour = "purple") +
-        annotate("text", x = ddr.loc, y = 2500, label = ddr, size = 2, colour = "purple")
+        annotate("text", x = ddl.loc, y = acticutoff*1.25/2, label = ddl, size = 2, colour = "purple") +
+        annotate("text", x = ddr.loc, y = acticutoff*1.25/2, label = ddr, size = 2, colour = "purple")
     
       
       if(exists("dfSOLw")) {
         if (dim(dfSOLw)[1] > 0) {
           pActi <- pActi +
-            geom_rect(data = dfSOLw, mapping = aes(xmin = SOLstart2, xmax = SOLend2, ymin = 4001, ymax = 5000), fill = "#F781BF", alpha = 0.3)
+            geom_rect(data = dfSOLw, mapping = aes(xmin = SOLstart2, xmax = SOLend2, ymin = acticutoff + 1, ymax = acticutoff*1.25), fill = "#F781BF", alpha = 0.3)
         }
       }
       
       if(exists("dfSW")) {
         if (dim(dfSW)[1] > 0) {
           pActi <- pActi +
-            geom_tile(data = dfSW, mapping = aes(x = datetime, y = 2500, height = 5000, width = 150, fill = fillcolor)) +
-            geom_text(data = dfSW, mapping = aes(x = Loc, y = 4600, label = Lab, colour = fillcolor), size = 2.5)
+            geom_tile(data = dfSW, mapping = aes(x = datetime, y = acticutoff*1.25/2, height = acticutoff*1.25, width = 150, fill = fillcolor)) +
+            geom_text(data = dfSW, mapping = aes(x = Loc, y = acticutoff*1.15, label = Lab, colour = fillcolor), size = 2.5)
         }
       }
       
       if(exists("dfclass")) {
         if (dim(dfclass)[1] > 0) {
           pActi <- pActi +
-            geom_segment(data = dfclass, mapping = aes(x = FirstClassStart, y = 4000, xend = FirstClassStart, yend = 5000, linetype = ClassMode), colour = "#6A3D9A", size = 0.5)
+            geom_segment(data = dfclass, mapping = aes(x = FirstClassStart, y = acticutoff, xend = FirstClassStart, yend = acticutoff*1.25, linetype = ClassMode), colour = "#6A3D9A", size = 0.5) +
+            scale_linetype_manual(values = linetypeCode)
           
           if("Tardiness" %in% colnames(dfclass)) {
             pActi <- pActi +
-              geom_text(data = dfclass, mapping = aes(x = FirstClassStart, y = 5300, label = Tardiness), colour = "#6A3D9A", size = 2)
+              geom_text(data = dfclass, mapping = aes(x = FirstClassStart, y = acticutoff*1.325, label = Tardiness), colour = "#6A3D9A", size = 2)
           }
         }
       }
@@ -423,7 +443,6 @@ for (Subj in subjList) {
       ## Add layers of other styling
       pActi <- pActi + scale_fill_manual(values = colCode) +
         scale_color_manual(values = colCode) +
-        scale_linetype_manual(values = linetypeCode) +
         theme_gray() +
         theme(axis.title.x = element_blank(),
               axis.title.y = element_blank(),
@@ -434,7 +453,7 @@ for (Subj in subjList) {
               #plot.background = element_rect(colour = "black"),
               plot.margin = margin(t=0,r=5.5,b=5.5,l=5.5)
         ) +
-        scale_y_continuous(limits = c(0,5400), breaks = seq(0,4000,4000)) +
+        scale_y_continuous(limits = c(0,acticutoff*1.35), breaks = seq(0,acticutoff,acticutoff)) +
         coord_cartesian(xlim = c(xlm1,xlm2), clip = 'off')
       
     })
