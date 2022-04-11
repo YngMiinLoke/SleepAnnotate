@@ -66,7 +66,9 @@ sleepcolor <- "#c91230"                 # carmine red
 napcolor <- "#2e514d"                   # pine green
 telcolor <- "#e28743"                   # vibrant honey
 
-## Input cutoff of plot (For ActiGraph, each "strip" of plot starts from 12:00:00 of one day to 12:00:00 of the next day)
+## Input cutoff of plot 
+## For ActiGraph, each "strip" of plot starts from 12:00:00 of one day to 12:00:00 of the next day
+## For Philips, each "strip" of plot starts from 19:00:00 of one day to 19:00:00 of the next day
 plotcutoff <- 12                        # Please only input integer (hour)
 
 ## Input the range of day to be printed
@@ -111,7 +113,7 @@ if(exists("dataTELEOri")) {
            wake = ymd_hms(wake, tz = "Asia/Singapore"))
 }
 
-Subj <- "S001" #For script testing only
+#Subj <- "S001" #For script testing only
 for (Subj in subjList) {
   tryCatch({
     print(paste0("Making figures for subject ", Subj))
@@ -123,6 +125,18 @@ for (Subj in subjList) {
     
     ## Format Date and Time and date-time object
     dataActi <- dataActi %>% mutate(DateTime = paste0(Date, " ", Time)) %>% mutate(DateTime = dmy_hm(DateTime, tz = "Asia/Singapore")) 
+    
+    #################### Process activity counts ####################
+    dfacti <- dataActi
+    
+    ## retain sleep and wake columns
+    dfacti <- dfacti %>%
+      rename(datetime = DateTime,
+             acticount = Axis1) %>%
+      select(datetime, acticount)
+    
+    ## Curb the activity count at the cutoff specified (default = 4000)
+    dfacti <- dfacti %>% mutate(acticountadj = ifelse(acticount > acticutoff, acticutoff, acticount))
     
     # ################################### subset diaries ###################################
     dfsleep <- dataNocSleepOri %>% filter(Subject == Subj)
@@ -304,18 +318,6 @@ for (Subj in subjList) {
     ## Set colors
     colCode = c("noc" = sleepcolor, "nap" = napcolor, "tel" = telcolor)
     
-    #################### Process activity counts ####################
-    dfacti <- dataActi
-    
-    ## retain sleep and wake columns
-    dfacti <- dfacti %>%
-      rename(datetime = DateTime,
-             acticount = Axis1) %>%
-      select(datetime, acticount)
-    
-    ## Curb the activity count at the cutoff specified (default = 4000)
-    dfacti <- dfacti %>% mutate(acticountadj = ifelse(acticount > acticutoff, acticutoff, acticount))
-    
     #################### Process class start time ####################
     
     if(exists("dataClassOri")) {
@@ -398,6 +400,10 @@ for (Subj in subjList) {
       xlm1 <- ymd_hms(j[1], tz = "Asia/Singapore")
       xlm2 <- ymd_hms(j[2], tz = "Asia/Singapore")
       
+      ## Determine the breaks and labels of x-axis
+      xlmbreak <- seq(from = xlm1, to = xlm2, by = "6 hour")
+      xlmlabel <- format(xlmbreak, '%b %d %H:%M')
+      
       ## Put the day of the week to facilitate reading
       ddl <- str_to_upper(as.character(wday(j[1], label = TRUE)))
       ddl.loc <- ymd_hms(j[1],  tz = "Asia/Singapore") - dminutes(40)
@@ -423,7 +429,9 @@ for (Subj in subjList) {
         if (dim(dfSW)[1] > 0) {
           pActi <- pActi +
             geom_tile(data = dfSW, mapping = aes(x = datetime, y = acticutoff*1.25/2, height = acticutoff*1.25, width = 150, fill = fillcolor)) +
-            geom_text(data = dfSW, mapping = aes(x = Loc, y = acticutoff*1.15, label = Lab, colour = fillcolor), size = 2.5)
+            geom_text(data = dfSW, mapping = aes(x = Loc, y = acticutoff*1.15, label = Lab, colour = fillcolor), size = 2.5) +
+            scale_fill_manual(values = colCode) +
+            scale_color_manual(values = colCode)
         }
       }
       
@@ -441,8 +449,7 @@ for (Subj in subjList) {
       }
       
       ## Add layers of other styling
-      pActi <- pActi + scale_fill_manual(values = colCode) +
-        scale_color_manual(values = colCode) +
+      pActi <- pActi +
         theme_gray() +
         theme(axis.title.x = element_blank(),
               axis.title.y = element_blank(),
@@ -454,6 +461,7 @@ for (Subj in subjList) {
               plot.margin = margin(t=0,r=5.5,b=5.5,l=5.5)
         ) +
         scale_y_continuous(limits = c(0,acticutoff*1.35), breaks = seq(0,acticutoff,acticutoff)) +
+        scale_x_continuous(breaks = xlmbreak, labels = xlmlabel) +
         coord_cartesian(xlim = c(xlm1,xlm2), clip = 'off')
       
     })
